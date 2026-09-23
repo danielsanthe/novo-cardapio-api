@@ -7,17 +7,9 @@ router = APIRouter(prefix='/auth', tags=["Autenticação"])
 def me():
 
     # Retorno Fake
-    return 'Sou Rogério'
+    return 'Sou Daniel'
 
 
 @router.post('/login')
 def login():
     return 'Autenticado com sucesso!'
-
-    #Retonro fake
-    return "Sou Daniel"
-
-@router.post('/Login')
-def login():
-    return ''
-
