@@ -5,6 +5,7 @@ router = APIRouter(prefix='/auth', tags=["Autenticação"])
 # Criar os endpoints
 @router.get('/me') # /auth/me
 def me():
+
     # Retorno Fake
     return 'Sou Rogério'
 
@@ -12,3 +13,11 @@ def me():
 @router.post('/login')
 def login():
     return 'Autenticado com sucesso!'
+
+    #Retonro fake
+    return "Sou Daniel"
+
+@router.post('/Login')
+def login():
+    return ''
+

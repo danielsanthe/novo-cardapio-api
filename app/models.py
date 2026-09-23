@@ -78,3 +78,35 @@ class ItemCardapioUpdate(SQLModel):
 class ItemCardapioResponse(ItemCardapioBase):
     """Schema retornado pela API nas consultas. Garante a presença do campo 'id'."""
     id: int
+
+
+# =====================================================================
+# ClientesBase
+# =====================================================================
+class ClientesBase(SQLModel):
+    """Campos comuns compartilhados tanto pelo Banco quanto pela API."""
+    nome: str = Field(
+        min_length=2, 
+        max_length=100, 
+        description="Nome do Cliente"
+    )
+    endereco: str | None = Field(
+        default=None, 
+        max_length=255, 
+        description="Endereço do cliente"
+    )
+
+# =====================================================================
+# Create clientes
+# =====================================================================
+class ClientesCreate(ClientesBase):
+    """Schema para validação do corpo da requisição no cadastro (POST)."""
+    pass
+
+# =====================================================================
+# Consulta clientes
+# =====================================================================
+class ClientesResponse(ClientesBase):
+    """Schema retornado pela API nas consultas. Garante a presença do campo 'id'."""
+    id: int
+
