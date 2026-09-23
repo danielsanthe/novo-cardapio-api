@@ -1,3 +1,5 @@
+
+from typing import Optional
 from sqlmodel import SQLModel, Field
 
 # =====================================================================
@@ -81,32 +83,88 @@ class ItemCardapioResponse(ItemCardapioBase):
 
 
 # =====================================================================
-# ClientesBase
+# CONCEITO: Modelo Base
 # =====================================================================
+
 class ClientesBase(SQLModel):
     """Campos comuns compartilhados tanto pelo Banco quanto pela API."""
+
     nome: str = Field(
         min_length=2, 
         max_length=100, 
         description="Nome do Cliente"
     )
-    endereco: str | None = Field(
+    cpf: str = Field(
+        min_length=11, 
+        max_length=14, 
+        description="CPF do cliente (com ou sem pontuação)"
+    )
+    telefone: str = Field(
+        min_length=10, 
+        max_length=15, 
+        description="Telefone de contato com DDD"
+    )
+    email: str = Field(
+        max_length=100, 
+        description="E-mail do cliente"
+    )
+    endereco: Optional[str] = Field(
         default=None, 
         max_length=255, 
-        description="Endereço do cliente"
+        description="Endereço do cliente (Rua, Número, Bairro)"
+    )
+    cep: Optional[str] = Field(
+        default=None, 
+        min_length=8, 
+        max_length=9, 
+        description="CEP do cliente (ex: 01001-000 ou 01001000)"
+    )
+    cidade: Optional[str] = Field(
+        default=None, 
+        min_length=2, 
+        max_length=100, 
+        description="Cidade do cliente"
+    )
+    uf: Optional[str] = Field(
+        default=None, 
+        min_length=2, 
+        max_length=2, 
+        description="Estado (UF) com 2 letras (ex: SP, RJ, CE)"
     )
 
+
 # =====================================================================
-# Create clientes
+# CONCEITO: Modelo ORM (Tabela no Banco de Dados)
 # =====================================================================
+
+class Clientes(ClientesBase, table=True):
+    """Tabela de clientes salva no banco de dados."""
+    __tablename__ = "clientes"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+
+# =====================================================================
+# CONCEITO: Schemas de Validação de Entrada e Saída (DTOs)
+# =====================================================================
+
 class ClientesCreate(ClientesBase):
     """Schema para validação do corpo da requisição no cadastro (POST)."""
     pass
 
-# =====================================================================
-# Consulta clientes
-# =====================================================================
+
+class ClientesUpdate(SQLModel):
+    """Schema para atualização de dados (PUT/PATCH). Permite atualizar campos parciais."""
+    nome: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    cpf: Optional[str] = Field(default=None, min_length=11, max_length=14)
+    telefone: Optional[str] = Field(default=None, min_length=10, max_length=15)
+    email: Optional[str] = Field(default=None, max_length=100)
+    endereco: Optional[str] = Field(default=None, max_length=255)
+    cep: Optional[str] = Field(default=None, min_length=8, max_length=9)
+    cidade: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    uf: Optional[str] = Field(default=None, min_length=2, max_length=2)
+
+
 class ClientesResponse(ClientesBase):
     """Schema retornado pela API nas consultas. Garante a presença do campo 'id'."""
     id: int
-
